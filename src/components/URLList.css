@@ -1,0 +1,13 @@
+.ui.list.url-list {
+    margin: 1rem 15rem;
+}
+
+.ui.list.list>.item {
+    font-size: 20px;
+    padding: .4rem 0;
+}
+
+.ui.list>.item [class*="right floated"]  {
+    font-size: 20px;
+    padding: .4rem 0;
+}

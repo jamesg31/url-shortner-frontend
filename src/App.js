@@ -5,6 +5,7 @@ import validator from 'validator'
 import NavHeader from './components/NavHeader';
 import './App.css';
 import Login from './components/Login';
+import URLList from './components/URLList';
 
 class App extends React.Component {
   constructor(props) {
@@ -15,8 +16,8 @@ class App extends React.Component {
       destinationInput: '',
       destinationInputError: false
     }
-
     this.timeout = 0;
+    this.urlListRef = React.createRef();
   }
 
   onUrlInputChange(event) {
@@ -47,7 +48,8 @@ class App extends React.Component {
   onButtonClick = () => {
     axios.post('/api/urls', { url: this.state.urlInput, destination: this.state.destinationInput }).then((res) => {
       console.log(res);
-    })
+      this.urlListRef.current.updateList();
+    });
   }
 
   render() {
@@ -76,6 +78,7 @@ class App extends React.Component {
             <Input value={this.state.urlInput} action={button} onChange={(event) => this.onUrlInputChange(event)} label={window.location.origin + '/'} placeholder='shortened-url' />
           </Segment>
         </Segment.Group>
+        <URLList ref={this.urlListRef} />
       </React.Fragment>
     );
   }
