@@ -36,3 +36,7 @@
     transform: rotate(360deg);
   }
 }
+
+.ui.horizontal.segments.create-form {
+  margin: 1rem 15rem;
+}

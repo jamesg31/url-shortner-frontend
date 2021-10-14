@@ -1,10 +1,10 @@
 import React from 'react';
 import axios from 'axios';
-import './App.css';
-import { Input, Button } from 'semantic-ui-react';
+import { Input, Button, Segment } from 'semantic-ui-react';
 import validator from 'validator'
-
-const api = 'http://localhost:3001/api/'
+import NavHeader from './components/NavHeader';
+import './App.css';
+import Login from './components/Login';
 
 class App extends React.Component {
   constructor(props) {
@@ -24,7 +24,7 @@ class App extends React.Component {
     if (this.timeout) clearTimeout(this.timeout);
     this.timeout = setTimeout(() => {
       if (event.target.value.length > 0) {
-        axios.get(api + 'urls/' + event.target.value).then((res) => {
+        axios.get('/api/urls/' + event.target.value).then((res) => {
           console.log(res.data);
           if (res.data.length === 0) {
             this.setState({ buttonState: 2 });
@@ -44,8 +44,8 @@ class App extends React.Component {
     }
   }
 
-  onButtonClick(event) {
-    axios.post(api + 'urls', { url: this.state.urlInput, destination: this.state.destinationInput }).then((res) => {
+  onButtonClick = () => {
+    axios.post('/api/urls', { url: this.state.urlInput, destination: this.state.destinationInput }).then((res) => {
       console.log(res);
     })
   }
@@ -56,18 +56,26 @@ class App extends React.Component {
     } else if (this.state.buttonState === 1) {
       button = <Button negative>Not Available</Button>
     } else if (this.state.buttonState === 2) {
-      button = <Button positive onClick={(event) => this.onButtonClick()}>Create</Button>
+      button = <Login onComplete={this.onButtonClick}>Create</Login>
     }
     if (this.state.destinationInputError) {
-      var destinationInput = <Input error value={this.state.destinationInput} style={{ margin: '10px' }} placeholder='https://example.com' onChange={(event) => this.onDestinationInputChange(event)} />
+      var destinationInput = <Input error value={this.state.destinationInput} placeholder='https://example.com' onChange={(event) => this.onDestinationInputChange(event)} />
     } else {
-      destinationInput = <Input value={this.state.destinationInput} style={{ margin: '10px' }} placeholder='https://example.com' onChange={(event) => this.onDestinationInputChange(event)} />
+      destinationInput = <Input value={this.state.destinationInput} placeholder='https://example.com' onChange={(event) => this.onDestinationInputChange(event)} />
     }
     return (
       <React.Fragment>
-        {destinationInput}
-        <br />
-        <Input value={this.state.urlInput} style={{ marginLeft: '10px' }} action={button} onChange={(event) => this.onUrlInputChange(event)} label={window.location.origin + '/'} placeholder='shortened-url' />
+        <NavHeader />
+        <Segment.Group className='create-form' horizontal raised>
+          <Segment className='create-form-segment' align="right">
+            <h4>Destination:</h4>
+            {destinationInput}
+          </Segment>
+          <Segment className='create-form-segment'>
+            <h4>URL:</h4>
+            <Input value={this.state.urlInput} action={button} onChange={(event) => this.onUrlInputChange(event)} label={window.location.origin + '/'} placeholder='shortened-url' />
+          </Segment>
+        </Segment.Group>
       </React.Fragment>
     );
   }
