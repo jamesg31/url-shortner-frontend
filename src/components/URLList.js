@@ -7,7 +7,7 @@ class URLList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            urls: [1]
+            urls: []
         }
     }
 
@@ -21,6 +21,12 @@ class URLList extends React.Component {
         });
     }
 
+    delete = (event) => {
+        axios.delete('/api/urls/' + event.currentTarget.getAttribute('url')).then((results) => {
+            this.updateList();
+        })
+    }
+
     render() {
         if (this.state.urls.length > 0) {
             var list = <List divided verticalAlign='middle' className='url-list'>
@@ -28,7 +34,7 @@ class URLList extends React.Component {
                 {this.state.urls.map((url) => {
                     return (
                         <List.Item>
-                            <List.Content floated='right'><Button negative>Delete</Button></List.Content>
+                            <List.Content floated='right'><Button negative url={url.url} onClick={this.delete}>Delete</Button></List.Content>
                             <List.Content>
                                 <List.Header>URL: /{url.url}</List.Header>
                                 Redirect Destination: {url.destination}
